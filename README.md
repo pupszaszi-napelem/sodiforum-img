@@ -16,6 +16,7 @@ The app uploads to Catbox first. If Catbox fails, it falls back to imgbb. After 
 - Forum-like colors and layout matching `https://forum.sodika.dk/index.php#bottom`.
 - Basic upload rate limiting.
 - Byte-based image validation with `http.DetectContentType`.
+- In-memory multipart upload buffering. No temp upload files are created.
 - Security headers for browser responses.
 - Docker image support.
 

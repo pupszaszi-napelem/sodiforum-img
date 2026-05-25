@@ -123,6 +123,49 @@ func TestUploadRejectsNonImageBeforeProviderCall(t *testing.T) {
 	}
 }
 
+func TestUploadReadsMultipartImageFromMemory(t *testing.T) {
+	png := []byte{
+		0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+		0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
+		0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+		0x08, 0x04, 0x00, 0x00, 0x00, 0xb5, 0x1c, 0x0c,
+	}
+	var body strings.Builder
+	writer := multipart.NewWriter(&body)
+	if err := writer.WriteField("ignored", "value"); err != nil {
+		t.Fatal(err)
+	}
+	part, err := writer.CreateFormFile("image", "pixel.png")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write(png); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	a := &app{
+		limiter: newRateLimiter(),
+		client: &http.Client{Transport: roundTripFunc(func(req *http.Request) (*http.Response, error) {
+			if req.URL.Host != "catbox.moe" {
+				t.Fatalf("unexpected provider host: %s", req.URL.Host)
+			}
+			return response(200, "https://files.catbox.moe/pixel.png"), nil
+		})},
+	}
+	req := httptest.NewRequest(http.MethodPost, "/upload", strings.NewReader(body.String()))
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	res := httptest.NewRecorder()
+
+	a.upload(res, req)
+
+	if !strings.Contains(res.Body.String(), "[img src=https://files.catbox.moe/pixel.png]") {
+		t.Fatalf("expected generated image text, got: %s", res.Body.String())
+	}
+}
+
 func TestSecurityHeaders(t *testing.T) {
 	next := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)

@@ -33,6 +33,7 @@ Small Go forum image uploader. Uses Go `net/http`, browser HTMX, `github.com/joh
 
 - `main.go`: app setup, routes, index handler, env helper.
 - `upload.go`: upload handler, image validation, filename cleanup, upload error fragments.
+- Upload handler must use `MultipartReader` + buffers. Do not use `ParseMultipartForm`/`FormFile`, because those can create temp files.
 - `providers.go`: Catbox/imgbb upload providers, fallback order, uploaded URL validation.
 - `limiter.go`: per-IP upload throttling.
 - `middleware.go`: security headers.
