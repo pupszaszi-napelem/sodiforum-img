@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+bin/
+dist/
+*.test
+*.out
+coverage.out
+.DS_Store
+.idea/
+.vscode/
+AGENTS.original.md

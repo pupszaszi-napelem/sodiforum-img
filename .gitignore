@@ -1,0 +1,18 @@
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Go build output
+bin/
+dist/
+*.exe
+*.test
+*.out
+coverage.out
+
+# Editor and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
