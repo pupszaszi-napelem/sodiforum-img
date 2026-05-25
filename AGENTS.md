@@ -5,12 +5,14 @@ Small Go forum image uploader. Uses Go `net/http`, browser HTMX, `github.com/joh
 ## Commands
 
 - Dev server: `make run`.
+- Live reload dev server: `make dev`.
 - Tests: `make test`.
 - Build binary: `make build`.
 - Build Docker image: `make docker-build`.
 - Format Go: `make fmt`.
 - Tidy deps: `make tidy`.
 - Remove build output: `make clean`.
+- Default `make` prints command help.
 
 ## Runtime Configuration
 

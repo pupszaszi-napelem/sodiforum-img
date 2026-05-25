@@ -24,6 +24,7 @@ The app uploads to Catbox first. If Catbox fails, it falls back to imgbb. After 
 
 - Go 1.22+
 - `make`
+- `air`, only for live reload development
 - Docker, only if building/running container image
 
 ## Configuration
@@ -60,12 +61,20 @@ Open:
 http://localhost:8080
 ```
 
+Live reload with Air:
+
+```sh
+make dev
+```
+
 ## Development Commands
 
 ```sh
+make
 make fmt
 make test
 make build
+make dev
 make tidy
 make clean
 ```
